@@ -81,9 +81,6 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vue-tsc": "^2.0.6"
   },
-  "simple-git-hooks": {
-    "pre-commit": "npm lint-staged"
-  },
   "lint-staged": {
     "*": "eslint --fix"
   }

@@ -14,29 +14,11 @@
       </a-col>
       <a-col :xs="24" :sm="12" :md="11">
         <div class="login-right">
-          <h3 v-if="isEmailLogin" class="login-right__title">邮箱登录</h3>
-          <EmailLogin v-show="isEmailLogin" />
-          <a-tabs v-show="!isEmailLogin" class="login-right__form">
+          <a-tabs class="login-right__form">
             <a-tab-pane key="1" title="账号登录">
               <AccountLogin />
             </a-tab-pane>
-            <a-tab-pane key="2" title="手机号登录">
-              <PhoneLogin />
-            </a-tab-pane>
           </a-tabs>
-          <div class="login-right__oauth">
-            <a-divider orientation="center">其他登录方式</a-divider>
-            <div class="list">
-              <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user /> 账号/手机号登录</div>
-              <div v-else class="mode item" @click="toggleLoginMode"><icon-email /> 邮箱登录</div>
-              <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
-                <GiSvgIcon name="gitee" :size="24" />
-              </a>
-              <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
-                <GiSvgIcon name="github" :size="24" />
-              </a>
-            </div>
-          </div>
         </div>
       </a-col>
     </a-row>
@@ -59,41 +41,20 @@
     <a-row align="stretch" class="login-box">
       <a-col :xs="24" :sm="12" :md="11">
         <div class="login-right">
-          <h3 v-if="isEmailLogin" class="login-right__title">邮箱登录</h3>
-          <EmailLogin v-show="isEmailLogin" />
-          <a-tabs v-show="!isEmailLogin" class="login-right__form">
+          <a-tabs class="login-right__form">
             <a-tab-pane key="1" title="账号登录">
               <AccountLogin />
-            </a-tab-pane>
-            <a-tab-pane key="2" title="手机号登录">
-              <PhoneLogin />
             </a-tab-pane>
           </a-tabs>
         </div>
       </a-col>
     </a-row>
-    <div class="login-right__oauth">
-      <a-divider orientation="center">其他登录方式</a-divider>
-      <div class="list">
-        <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user /> 账号/手机号登录</div>
-        <div v-else class="mode item" @click="toggleLoginMode"><icon-email /> 邮箱登录</div>
-        <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
-          <GiSvgIcon name="gitee" :size="24" />
-        </a>
-        <a class="item" title="使用 GitHub 账号登录" @click="onOauth('github')">
-          <GiSvgIcon name="github" :size="24" />
-        </a>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import Background from './components/background/index.vue'
 import AccountLogin from './components/account/index.vue'
-import PhoneLogin from './components/phone/index.vue'
-import EmailLogin from './components/email/index.vue'
-import { socialAuth } from '@/apis'
 import { useAppStore } from '@/stores'
 import { useDevice } from '@/hooks'
 
@@ -103,18 +64,6 @@ const { isDesktop } = useDevice()
 const appStore = useAppStore()
 const title = computed(() => appStore.getTitle())
 const logo = computed(() => appStore.getLogo())
-
-const isEmailLogin = ref(false)
-// 切换登录模式
-const toggleLoginMode = () => {
-  isEmailLogin.value = !isEmailLogin.value
-}
-
-// 第三方登录授权
-const onOauth = async (source: string) => {
-  const { data } = await socialAuth(source)
-  window.location.href = data.authorizeUrl
-}
 </script>
 
 <style lang="scss" scoped>
@@ -131,6 +80,7 @@ const onOauth = async (source: string) => {
     align-items: center;
     background-color: var(--color-bg-5);
     color: #121314;
+
     &-logo {
       width: 100%;
       height: 104px;
@@ -144,12 +94,14 @@ const onOauth = async (source: string) => {
       background-image: url('/src/assets/images/login_h5.jpg');
       background-size: 100% 100%;
       box-sizing: border-box;
+
       img {
         width: 34px;
         height: 34px;
         margin-right: 8px;
       }
     }
+
     &-box {
       width: 100%;
       display: flex;
@@ -163,6 +115,7 @@ const onOauth = async (source: string) => {
     flex-direction: column;
     padding: 30px 30px 0;
     box-sizing: border-box;
+
     &__title {
       color: var(--color-text-1);
       font-weight: 500;
@@ -170,35 +123,43 @@ const onOauth = async (source: string) => {
       line-height: 32px;
       margin-bottom: 20px;
     }
+
     &__form {
       :deep(.arco-tabs-nav-tab) {
         display: flex;
         justify-content: start;
         align-items: center;
       }
+
       :deep(.arco-tabs-tab) {
         color: var(--color-text-2);
         margin: 0 20px 0 0;
       }
+
       :deep(.arco-tabs-tab-title) {
         font-size: 16px;
         font-weight: 500;
         line-height: 22px;
       }
+
       :deep(.arco-tabs-content) {
         margin-top: 10px;
       }
+
       :deep(.arco-tabs-tab-active),
       :deep(.arco-tabs-tab-title:hover) {
         color: rgb(var(--arcoblue-6));
       }
+
       :deep(.arco-tabs-nav::before) {
         display: none;
       }
+
       :deep(.arco-tabs-tab-title:before) {
         display: none;
       }
     }
+
     &__oauth {
       width: 100%;
       position: fixed;
@@ -213,14 +174,17 @@ const onOauth = async (source: string) => {
         font-weight: 400;
         line-height: 20px;
       }
+
       .list {
         align-items: center;
         display: flex;
         justify-content: center;
         width: 100%;
+
         .item {
           margin-right: 15px;
         }
+
         .mode {
           color: var(--color-text-2);
           font-size: 12px;
@@ -235,15 +199,18 @@ const onOauth = async (source: string) => {
           height: 32px;
           justify-content: center;
           cursor: pointer;
+
           .icon {
             width: 21px;
             height: 20px;
           }
         }
+
         .mode svg {
           font-size: 16px;
           margin-right: 10px;
         }
+
         .mode:hover,
         .mode svg:hover {
           background: rgba(var(--primary-6), 0.05);
@@ -267,6 +234,7 @@ const onOauth = async (source: string) => {
     position: absolute;
     bottom: 10px;
     z-index: 999;
+
     .beian {
       .text {
         font-size: 12px;
@@ -275,6 +243,7 @@ const onOauth = async (source: string) => {
         line-height: 20px;
         text-align: center;
       }
+
       .below {
         align-items: center;
         display: flex;
@@ -282,6 +251,7 @@ const onOauth = async (source: string) => {
     }
   }
 }
+
 @media screen and (min-width: 571px) {
   .h5 {
     display: none !important;
@@ -293,6 +263,7 @@ const onOauth = async (source: string) => {
     justify-content: center;
     align-items: center;
     background-color: var(--color-bg-5);
+
     &-logo {
       position: fixed;
       top: 20px;
@@ -306,12 +277,14 @@ const onOauth = async (source: string) => {
       display: flex;
       justify-content: center;
       align-items: center;
+
       img {
         width: 34px;
         height: 34px;
         margin-right: 8px;
       }
     }
+
     &-box {
       width: 86%;
       max-width: 850px;
@@ -331,6 +304,7 @@ const onOauth = async (source: string) => {
     position: relative;
     overflow: hidden;
     background: linear-gradient(60deg, rgb(var(--primary-6)), rgb(var(--primary-3)));
+
     &__img {
       width: 100%;
       position: absolute;
@@ -352,6 +326,7 @@ const onOauth = async (source: string) => {
     flex-direction: column;
     padding: 30px 30px 0;
     box-sizing: border-box;
+
     &__title {
       color: var(--color-text-1);
       font-weight: 500;
@@ -359,51 +334,63 @@ const onOauth = async (source: string) => {
       line-height: 32px;
       margin-bottom: 20px;
     }
+
     &__form {
       :deep(.arco-tabs-nav-tab) {
         display: flex;
         justify-content: center;
         align-items: center;
       }
+
       :deep(.arco-tabs-tab) {
         color: var(--color-text-2);
       }
+
       :deep(.arco-tabs-tab-title) {
         font-size: 16px;
         font-weight: 500;
         line-height: 22px;
       }
+
       :deep(.arco-tabs-content) {
         margin-top: 10px;
       }
+
       :deep(.arco-tabs-tab-active),
       :deep(.arco-tabs-tab-title:hover) {
         color: rgb(var(--arcoblue-6));
       }
+
       :deep(.arco-tabs-nav::before) {
         display: none;
       }
+
       :deep(.arco-tabs-tab-title:before) {
         display: none;
       }
     }
+
     &__oauth {
       margin-top: auto;
       margin-bottom: 20px;
+
       :deep(.arco-divider-text) {
         color: var(--color-text-4);
         font-size: 12px;
         font-weight: 400;
         line-height: 20px;
       }
+
       .list {
         align-items: center;
         display: flex;
         justify-content: center;
         width: 100%;
+
         .item {
           margin-right: 15px;
         }
+
         .mode {
           color: var(--color-text-2);
           font-size: 12px;
@@ -418,15 +405,18 @@ const onOauth = async (source: string) => {
           height: 32px;
           justify-content: center;
           cursor: pointer;
+
           .icon {
             width: 21px;
             height: 20px;
           }
         }
+
         .mode svg {
           font-size: 16px;
           margin-right: 10px;
         }
+
         .mode:hover,
         .mode svg:hover {
           background: rgba(var(--primary-6), 0.05);
@@ -450,6 +440,7 @@ const onOauth = async (source: string) => {
     position: absolute;
     bottom: 10px;
     z-index: 999;
+
     .beian {
       .text {
         font-size: 12px;
@@ -458,6 +449,7 @@ const onOauth = async (source: string) => {
         line-height: 20px;
         text-align: center;
       }
+
       .below {
         align-items: center;
         display: flex;

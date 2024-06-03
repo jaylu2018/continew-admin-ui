@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, reactive, toRefs } from 'vue'
 import { generate, getRgbStr } from '@arco-design/color'
-import { type BasicConfig, listOptionDict } from '@/apis'
+import type { BasicConfig } from '@/apis'
 import defaultSettings from '@/config/setting.json'
 
 const storeSetup = () => {
@@ -56,25 +56,6 @@ const storeSetup = () => {
 
   // 系统配置配置
   const siteConfig = reactive({}) as BasicConfig
-  // 初始化系统配置
-  const initSiteConfig = () => {
-    listOptionDict({
-      category: 'SITE'
-    }).then((res) => {
-      const resMap = new Map()
-      res.data.forEach((item) => {
-        resMap.set(item.label, item.value)
-      })
-      siteConfig.SITE_FAVICON = resMap.get('SITE_FAVICON')
-      siteConfig.SITE_LOGO = resMap.get('SITE_LOGO')
-      siteConfig.SITE_TITLE = resMap.get('SITE_TITLE')
-      siteConfig.SITE_COPYRIGHT = resMap.get('SITE_COPYRIGHT')
-      document.title = resMap.get('SITE_TITLE')
-      document
-        .querySelector('link[rel="shortcut icon"]')
-        ?.setAttribute('href', resMap.get('SITE_FAVICON') || '/favicon.ico')
-    })
-  }
 
   // 设置系统配置
   const setSiteConfig = (config: BasicConfig) => {
@@ -108,7 +89,6 @@ const storeSetup = () => {
     setThemeColor,
     initTheme,
     setMenuCollapse,
-    initSiteConfig,
     setSiteConfig,
     getFavicon,
     getLogo,
